@@ -10,36 +10,37 @@ jobs:
   code-quality:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.12'
-    - name: Install dependencies
-      run: |
-        pip install poetry
-        poetry install
-    - name: Run black
-      run: poetry run black . --check
-    - name: Run isort
-      run: poetry run isort . --check-only
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+      - name: Run black
+        run: poetry run black . --check
+      - name: Run isort
+        run: poetry run isort . --check-only
 
   build-and-test:
     needs: code-quality
     runs-on: ubuntu-latest
     env:
       DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      DJANGO_ENV: test  # 테스트 환경으로 설정
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-    - name: Install dependencies
-      run: |
-        pip install poetry
-        poetry install
-    - name: Run migrations
-      run: poetry run python manage.py migrate --settings=config.settings.test  # 테스트 설정 파일 사용
-    - name: Run tests
-      run: poetry run python manage.py test --settings=config.settings.test  # 테스트 설정 파일 사용
+      - uses: actions/checkout@v3  # 중복 제거 가능, 필요에 따라 조정 가능
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          poetry install
+      - name: Run migrations
+        run: poetry run python manage.py migrate --settings=config.settings.test  # 테스트 설정 파일 사용
+      - name: Run tests
+        run: poetry run python manage.py test --settings=config.settings.test  # 테스트 설정 파일 사용
