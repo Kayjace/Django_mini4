@@ -40,6 +40,6 @@ jobs:
         pip install poetry
         poetry install
     - name: Run migrations
-      run: poetry run python manage.py migrate --settings=Django_mini4.settings.test  # 테스트 설정 파일 사용
+      run: poetry run python manage.py migrate --settings=config.settings.test  # 테스트 설정 파일 사용
     - name: Run tests
-      run: poetry run python manage.py test --settings=Django_mini4.settings.test  # 테스트 설정 파일 사용
+      run: poetry run python manage.py test --settings=config.settings.test  # 테스트 설정 파일 사용
