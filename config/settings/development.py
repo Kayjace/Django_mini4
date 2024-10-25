@@ -2,7 +2,11 @@ import os
 
 from .base import *
 
+from dotenv import load_dotenv
+
 DEBUG = True
+
+load_dotenv()  # .env 파일 로드
 
 DATABASES = {
     "default": {

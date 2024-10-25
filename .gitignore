@@ -26,3 +26,6 @@ poetry.lock
 # OS generated
 .DS_Store
 Thumbs.db
+
+#Environment
+.env
