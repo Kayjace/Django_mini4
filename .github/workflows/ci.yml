@@ -39,6 +39,7 @@ jobs:
       run: |
         pip install poetry
         poetry install
+    - name: Run migrations
       run: poetry run python manage.py migrate --settings=myproject.settings.test  # 테스트 설정 파일 사용
     - name: Run tests
       run: poetry run python manage.py test --settings=myproject.settings.test  # 테스트 설정 파일 사용
