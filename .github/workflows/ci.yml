@@ -10,9 +10,9 @@ jobs:
   code-quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install dependencies
@@ -31,9 +31,9 @@ jobs:
       DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       DJANGO_ENV: test  # 테스트 환경으로 설정
     steps:
-      - uses: actions/checkout@v3  # 중복 제거 가능, 필요에 따라 조정 가능
+      - uses: actions/checkout@v4  # 중복 제거 가능, 필요에 따라 조정 가능
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install dependencies
