@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "users",  # Users 테이블을 위한 앱
     "accounts",  # Accounts 테이블을 위한 앱
     "transaction_history",  # Transaction_History 테이블을 위한 앱
+    "core",  # wait_for_DB 추가
 ]
 
 MIDDLEWARE = [
