@@ -29,11 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_HOST: ${{ secrets.DB_HOST }}
-      DB_PORT: ${{ secrets.DB_PORT }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
@@ -44,7 +39,6 @@ jobs:
       run: |
         pip install poetry
         poetry install
-    - name: Run migrations
-      run: poetry run python manage.py migrate
+      run: poetry run python manage.py migrate --settings=myproject.settings.test  # 테스트 설정 파일 사용
     - name: Run tests
-      run: poetry run python manage.py test
+      run: poetry run python manage.py test --settings=myproject.settings.test  # 테스트 설정 파일 사용
