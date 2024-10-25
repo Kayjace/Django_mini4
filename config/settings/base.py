@@ -16,9 +16,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    'users',  # Users 테이블을 위한 앱
-    'accounts',  # Accounts 테이블을 위한 앱
-    'transaction_history',  # Transaction_History 테이블을 위한 앱
+    "users",  # Users 테이블을 위한 앱
+    "accounts",  # Accounts 테이블을 위한 앱
+    "transaction_history",  # Transaction_History 테이블을 위한 앱
 ]
 
 MIDDLEWARE = [

@@ -1,11 +1,12 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.db import models
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         """Create and return a user with an email and password."""
         if not email:
-            raise ValueError('The Email field must be set')
+            raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)  # 비밀번호 해싱
@@ -14,11 +15,12 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password=None, **extra_fields):
         """Create and return a superuser with an email and password."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('is_admin', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("is_admin", True)
 
         return self.create_user(email, password, **extra_fields)
+
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True)
@@ -32,13 +34,13 @@ class User(AbstractBaseUser):
 
     objects = UserManager()  # 사용자 매니저 설정
 
-    USERNAME_FIELD = 'email'  # 로그인 시 사용할 필드
+    USERNAME_FIELD = "email"  # 로그인 시 사용할 필드
     REQUIRED_FIELDS = []  # 필수 필드 (email 외에 추가 필드가 필요하면 여기에 추가)
 
     class Meta:
-        db_table = 'users'  # 테이블 이름 설정
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+        db_table = "users"  # 테이블 이름 설정
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return self.email
