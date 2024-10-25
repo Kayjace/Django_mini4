@@ -40,7 +40,9 @@ jobs:
         run: |
           pip install poetry
           poetry install
-      - name: Run migrations
+      - name: Wait for test DB
+        run: poetry run python manage.py wait_for_db --settings=config.settings.test #테스트 설정 파일 사용
+      - name: Run test migrations
         run: poetry run python manage.py migrate --settings=config.settings.test  # 테스트 설정 파일 사용
       - name: Run tests
         run: poetry run python manage.py test --settings=config.settings.test  # 테스트 설정 파일 사용

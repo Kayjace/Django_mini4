@@ -68,3 +68,16 @@
   - `Accounts` 테이블의 `id`는 `Transaction_History` 테이블의 `account_id` 외래 키로 참조됩니다. 이는 각 거래가 특정 계좌에 연결되어 있음을 나타냅니다.
 
 이러한 구조는 사용자 관리와 금융 거래 기록을 효율적으로 관리할 수 있도록 설계되었습니다.
+
+
+# 모델 테스트 코드와 결과
+
+## 테스트 실행 코드
+```sh
+python manage.py test --settings=config.settings.development
+```
+
+## 이상 없을 시 다음과 같은 결과 출력
+
+![Tests](image-1.png)
+
