@@ -1,6 +1,6 @@
 from .base import *
 
-SECRET_KEY = 'your-hardcoded-secret-key'
+SECRET_KEY = "your-hardcoded-secret-key"
 
 DATABASES = {
     "default": {
