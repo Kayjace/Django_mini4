@@ -8,6 +8,6 @@ if ENVIRONMENT == "production":
 elif ENVIRONMENT == "development":
     from .development import *
 elif ENVIRONMENT == "test":
-    from .test import *  # test.py 추가
+    from .test import *
 else:
     from .base import *
