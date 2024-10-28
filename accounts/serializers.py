@@ -12,7 +12,7 @@ class AccountSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         # 계좌번호의 끝자리 마스킹
         if "account_number" in representation:
-            representation["account_number"] = (
-                representation["account_number"][:-6] + "****"
+            representation["masked_account_number"] = (
+                representation["account_number"][:-6] + "******"
             )
         return representation

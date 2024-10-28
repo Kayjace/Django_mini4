@@ -44,7 +44,15 @@ class AccountTests(APITestCase):
     def test_get_account(self):
         response = self.client.get(reverse("account-detail", args=[self.account.id]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # 원래 계좌번호와 비교
         self.assertEqual(response.data["account_number"], self.account.account_number)
+
+        # 마스킹된 계좌번호가 올바르게 생성되었는지 확인
+        expected_masked_account_number = self.account.account_number[:-4] + "****"
+        self.assertEqual(
+            response.data["masked_account_number"], expected_masked_account_number
+        )
 
     def test_update_account(self):
         updated_data = {"balance": 1500.00}
