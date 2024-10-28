@@ -1,18 +1,25 @@
-from django.test import TestCase
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
 
-from accounts.models import Account
-from transaction_history.models import TransactionHistory
-from users.models import User
+from accounts.models import Account  # Account 모델을 임포트합니다.
+from users.models import User  # User 모델을 임포트합니다.
+
+from .models import TransactionHistory  # TransactionHistory 모델을 임포트합니다.
 
 
-class TransactionHistoryModelTestCase(TestCase):
+class TransactionHistoryTests(APITestCase):
     def setUp(self):
-        # Given: 테스트용 사용자 및 계좌 생성
+        # 사용자 생성
         self.user = User.objects.create_user(
-            email="testuser@example.com",
-            nickname="testuser",
-            password="testpassword1234",
+            email="test_user@example.com",
+            password="password123",
+            nickname="test_nickname",
+            name="Test User",
+            phone_number="1234567890",
         )
+
+        # 계좌 생성
         self.account = Account.objects.create(
             user=self.user,
             account_number="1234567890",
@@ -21,30 +28,45 @@ class TransactionHistoryModelTestCase(TestCase):
             balance=1000.00,
         )
 
+        # 거래 내역 데이터 설정
         self.transaction_data = {
-            "account": self.account,
+            "account": self.account,  # Account 인스턴스를 직접 사용
             "amount": 100.00,
-            "balance_after_transaction": 900.00,
-            "description": "Test deposit",
-            "transaction_type": "deposit",
-            "transaction_method": "online",
+            "balance_after_transaction": 1100.00,
+            "description": "ATM 현금 인출",
+            "transaction_type": "withdrawal",
+            "transaction_method": "ATM",
         }
 
-    def test_create_transaction_history(self):
-        # When: 입력 받은 데이터를 바탕으로 거래 기록 모델을 생성하면
-        transaction = TransactionHistory.objects.create(**self.transaction_data)
+    def test_create_transaction(self):
+        # Account 인스턴스를 직접 사용
+        self.transaction_data["account"] = (
+            self.account.id
+        )  # Account 인스턴스를 직접 사용
+        response = self.client.post(reverse("transaction-list"), self.transaction_data)
+        print(response.data)  # 응답 내용을 출력하여 오류 확인
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        # Then: 성공적으로 생성된 거래 기록 모델은 입력받은 데이터와 일치해야 한다.
-        self.assertEqual(transaction.amount, self.transaction_data["amount"])
-        self.assertEqual(
-            transaction.balance_after_transaction,
-            self.transaction_data["balance_after_transaction"],
+    def test_get_transaction(self):
+        transaction = TransactionHistory.objects.create(**self.transaction_data)
+        response = self.client.get(reverse("transaction-detail", args=[transaction.id]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["description"], transaction.description)
+
+    def test_update_transaction(self):
+        transaction = TransactionHistory.objects.create(**self.transaction_data)
+        updated_data = {"amount": 200.00}
+        response = self.client.patch(
+            reverse("transaction-detail", args=[transaction.id]), updated_data
         )
-        self.assertEqual(transaction.description, self.transaction_data["description"])
-        self.assertEqual(
-            transaction.transaction_type, self.transaction_data["transaction_type"]
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        transaction.refresh_from_db()
+        self.assertEqual(transaction.amount, 200.00)
+
+    def test_delete_transaction(self):
+        transaction = TransactionHistory.objects.create(**self.transaction_data)
+        response = self.client.delete(
+            reverse("transaction-detail", args=[transaction.id])
         )
-        self.assertEqual(
-            transaction.transaction_method, self.transaction_data["transaction_method"]
-        )
-        self.assertEqual(transaction.account, self.account)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(TransactionHistory.objects.filter(id=transaction.id).exists())

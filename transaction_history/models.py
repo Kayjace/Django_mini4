@@ -34,4 +34,4 @@ class TransactionHistory(models.Model):
         ordering = ["-transaction_datetime"]  # 최신 거래가 위로 오도록 정렬
 
     def __str__(self):
-        return f"{self.transaction_type} - {self.amount} on {self.transaction_datetime} (Account: {self.account.account_number})"
+        return f"{self.transaction_type} - {self.amount} on {self.transaction_datetime} (Account_num: {self.account.account_number})"
