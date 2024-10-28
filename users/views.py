@@ -14,6 +14,22 @@ from .serializers import CustomTokenObtainPairSerializer, UserSerializer
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+
+        # 쿠키에 토큰 저장 (필요한 경우)
+        refresh_token = response.data["refresh"]
+        access_token = response.data["access"]
+
+        response.set_cookie(
+            key="refresh", value=refresh_token, httponly=True, secure=True
+        )  # 필요 시 secure=True 설정
+        response.set_cookie(
+            key="access", value=access_token, httponly=True, secure=True
+        )
+
+        return response
+
 
 User = get_user_model()
 

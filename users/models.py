@@ -1,4 +1,11 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import re
+
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -7,6 +14,10 @@ class UserManager(BaseUserManager):
         """Create and return a user with an email and password."""
         if not email:
             raise ValueError("The Email field must be set")
+
+        # 이메일 형식 검증
+        self.validate_email(email)
+
         email = self.normalize_email(email)
         extra_fields.setdefault("is_active", True)
         user = self.model(email=email, **extra_fields)
@@ -22,8 +33,15 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+    @staticmethod
+    def validate_email(email):
+        """이메일 형식 검증"""
+        email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        if not re.match(email_regex, email):
+            raise ValidationError("Invalid email format.")
 
-class User(AbstractBaseUser):
+
+class User(AbstractBaseUser, PermissionsMixin):  # PermissionsMixin 추가
     email = models.EmailField(unique=True)
     nickname = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
@@ -45,3 +63,11 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+    def has_perm(self, perm, obj=None):
+        """스태프 및 어드민 사용자만 권한을 가집니다."""
+        return self.is_staff or self.is_admin
+
+    def has_module_perms(self, app_label):
+        """스태프 및 어드민 사용자만 모듈 권한을 가집니다."""
+        return self.is_staff or self.is_admin
