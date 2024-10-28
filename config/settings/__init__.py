@@ -7,5 +7,7 @@ if ENVIRONMENT == "production":
     from .production import *
 elif ENVIRONMENT == "development":
     from .development import *
+elif ENVIRONMENT == "test":
+    from .test import *  # test.py 추가
 else:
     from .base import *

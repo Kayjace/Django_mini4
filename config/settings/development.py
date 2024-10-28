@@ -21,15 +21,3 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT"),
     }
 }
-
-AUTH_USER_MODEL = "users.User"
-
-SIMPLE_JWT = {
-    "USER_ID_FIELD": "email",
-    "USER_ID_CLAIM": "email",
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # 액세스 토큰의 유효 기간
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),  # 리프레시 토큰의 유효 기간
-    "ROTATE_REFRESH_TOKENS": True,  # 리프레시 토큰을 갱신할 때 새로운 리프레시 토큰 발급
-    "BLACKLIST_AFTER_ROTATION": True,  # 리프레시 토큰 갱신 후 이전 토큰 블랙리스트 추가
-}
