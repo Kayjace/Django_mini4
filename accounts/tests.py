@@ -49,7 +49,7 @@ class AccountTests(APITestCase):
         self.assertEqual(response.data["account_number"], self.account.account_number)
 
         # 마스킹된 계좌번호가 올바르게 생성되었는지 확인
-        expected_masked_account_number = self.account.account_number[:-4] + "****"
+        expected_masked_account_number = self.account.account_number[:-6] + "******"
         self.assertEqual(
             response.data["masked_account_number"], expected_masked_account_number
         )
