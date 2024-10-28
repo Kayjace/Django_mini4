@@ -18,4 +18,5 @@ urlpatterns = [
         views.register_user,
         name="register_user",
     ),  # 추가된 URL 패턴
+    path("info/<int:pk>/", views.UserInfoView.as_view(), name="user-info"),
 ]

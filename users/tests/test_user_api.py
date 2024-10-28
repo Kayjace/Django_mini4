@@ -3,6 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.test import APITestCase
 
 from ..models import User
 
@@ -81,3 +82,37 @@ class UserAPITestCase(TestCase):
     def test_create_user_without_email(self):
         with self.assertRaises(ValueError):
             User.objects.create_user(email="", password="testpass123")
+
+class UserInfoTests(APITestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='test@example.com',
+            password='testpass',
+            name='TestName',
+            phone_number = '0100001234'
+            # 필요한 다른 필드 추가
+        )
+        self.token = RefreshToken.for_user(self.user)
+    
+    def test_get_user_info(self):
+        # 헤더에 토큰 추가
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.token.access_token))
+        response = self.client.get(reverse('user-info', args=[self.user.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_user_info(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.token.access_token))
+        response = self.client.put(reverse('user-info', args=[self.user.id]), {
+            'email': 'new_email@example.com',
+            'password': 'newPass',
+            'nickname': 'testnew',
+            'name': 'New Name',
+            'phone_number': '0001231231'  # 필요한 다른 필드 추가
+        })
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_user_info(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.token.access_token))
+        response = self.client.delete(reverse('user-info', args=[self.user.id]))
+        self.assertEqual(response.status_code, 204)

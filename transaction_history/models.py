@@ -1,37 +1,29 @@
-from django.db import models
-
-from accounts.models import Account  # Account 모델을 임포트
-
+from django.db import models, transaction
+from accounts.models import Account
 
 class TransactionHistory(models.Model):
-    TRANSACTION_TYPE_CHOICES = [
-        ("deposit", "입금"),
-        ("withdrawal", "출금"),
-    ]
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    balance_after_transaction = models.DecimalField(max_digits=10, decimal_places=2, blank=True)  # blank=True 추가
+    description = models.CharField(max_length=255)
+    transaction_type = models.CharField(max_length=20)  # 예: withdrawal, deposit
+    transaction_method = models.CharField(max_length=50)  # 예: ATM, online
 
-    account = models.ForeignKey(
-        Account, on_delete=models.CASCADE
-    )  # Accounts 테이블과의 외래 키 관계
-    amount = models.DecimalField(max_digits=20, decimal_places=2)  # 거래 금액
-    balance_after_transaction = models.DecimalField(
-        max_digits=20, decimal_places=2
-    )  # 거래 후 잔액
-    description = models.CharField(
-        max_length=255
-    )  # 계좌인자내역(ex. 오픈뱅킹출금, ATM현금입금, 올리브영, 홍콩반점, 나이키 등)
-    transaction_type = models.CharField(
-        max_length=20, choices=TRANSACTION_TYPE_CHOICES
-    )  # 거래 타입 : 입금 / 출금 중 선택
-    transaction_method = models.CharField(
-        max_length=20
-    )  # 거래 방법 (현금, 계좌이체, 자동이체, 카드결제 등)
-    transaction_datetime = models.DateTimeField(auto_now_add=True)  # 거래 발생 시간
+    def save(self, *args, **kwargs):
+        with transaction.atomic():  # 트랜잭션 시작
+            if self.transaction_type == "withdrawal":
+                if self.account.balance < self.amount:
+                    raise ValueError("Insufficient funds for withdrawal.")
+                self.balance_after_transaction = self.account.balance - self.amount
+                self.account.balance -= self.amount
+            
+            elif self.transaction_type == "deposit":
+                self.balance_after_transaction = self.account.balance + self.amount
+                self.account.balance += self.amount
+            
+            else:
+                raise ValueError("Invalid transaction type")
 
-    class Meta:
-        db_table = "transaction_history"  # 테이블 이름 설정
-        verbose_name = "Transaction History"
-        verbose_name_plural = "Transaction Histories"
-        ordering = ["-transaction_datetime"]  # 최신 거래가 위로 오도록 정렬
-
-    def __str__(self):
-        return f"{self.transaction_type} - {self.amount} on {self.transaction_datetime} (Account_num: {self.account.account_number})"
+            # 계좌 저장 호출
+            self.account.save()
+            super().save(*args, **kwargs)  # 거래 내역 저장 호출
