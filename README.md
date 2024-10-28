@@ -1,5 +1,5 @@
 # Django_mini4
-![ERD](image.png)
+![ERD](./statics/img/ERD.png)
 
 # 데이터베이스 테이블 설명
 
@@ -79,5 +79,16 @@ python manage.py test --settings=config.settings.development
 
 ## 이상 없을 시 다음과 같은 결과 출력
 
-![Tests](image-1.png)
+![Tests](./statics/img/test_result.png)
 
+
+# 회원가입, 로그인, 로그아웃 프로세스 플로우차트
+
+## 회원가입
+![process flowchart](./statics/img/sign_up.png)
+
+## 로그인
+![process flowchart](./statics/img/login.png)
+
+## 로그아웃
+![process flowchart](./statics/img/logout.png)
