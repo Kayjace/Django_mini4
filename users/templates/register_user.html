@@ -1,0 +1,15 @@
+<!-- templates/register_user.html -->
+<form method="post">
+    {% csrf_token %}
+    <h2>가입하기</h2>
+    <p>이메일: {{ email }}</p>
+    <p>이름: {{ name }}</p>
+    
+    <label for="nickname">닉네임:</label>
+    <input type="text" id="nickname" name="nickname" required>
+    
+    <label for="phone_number">전화번호:</label>
+    <input type="text" id="phone_number" name="phone_number" required>
+    
+    <button type="submit">가입하기</button>
+</form>

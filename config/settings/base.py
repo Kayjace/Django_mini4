@@ -43,7 +43,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -67,6 +67,10 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,  # 리프레시 토큰을 갱신할 때 새로운 리프레시 토큰 발급
     "BLACKLIST_AFTER_ROTATION": True,  # 리프레시 토큰 갱신 후 이전 토큰 블랙리스트 추가
 }
+
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+GOOGLE_CALLBACK_URI = os.environ.get("GOOGLE_CALLBACK_URI")
 
 WSGI_APPLICATION = "config.wsgi.application"
 
