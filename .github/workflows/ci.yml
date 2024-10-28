@@ -28,7 +28,7 @@ jobs:
     needs: code-quality
     runs-on: ubuntu-latest
     env:
-      SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+      DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       DJANGO_ENV: test  # 테스트 환경으로 설정
     steps:
       - uses: actions/checkout@v4  # 중복 제거 가능, 필요에 따라 조정 가능
