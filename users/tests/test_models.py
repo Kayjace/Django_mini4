@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import User  # User 모델을 임포트
+from ..models import User  # User 모델을 임포트
 
 
 class UserModelTestCase(TestCase):

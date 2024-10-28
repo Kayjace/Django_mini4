@@ -1,3 +1,9 @@
+from django.contrib import admin
+from django.urls import include, path
+
 from .base import *
 
-# 개발 환경 특정 URL 패턴
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("users/", include("users.urls")),
+]
