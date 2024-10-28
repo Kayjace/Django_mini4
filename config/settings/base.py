@@ -4,8 +4,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # Application definition
 INSTALLED_APPS = [
@@ -16,11 +14,19 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "users",  # Users 테이블을 위한 앱
     "accounts",  # Accounts 테이블을 위한 앱
     "transaction_history",  # Transaction_History 테이블을 위한 앱
     "core",  # wait_for_DB 추가
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
