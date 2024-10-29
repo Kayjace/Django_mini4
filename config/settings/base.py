@@ -22,10 +22,10 @@ INSTALLED_APPS = [
     "accounts",  # Accounts 테이블을 위한 앱
     "transaction_history",  # Transaction_History 테이블을 위한 앱
     "core",  # wait_for_DB 추가
-    "analysis",  # 분석앱
     "notification",  # 알림앱
     "django_celery_beat",
     "django_celery_results",
+    "analysis.apps.AnalysisConfig",
 ]
 
 REST_FRAMEWORK = {
