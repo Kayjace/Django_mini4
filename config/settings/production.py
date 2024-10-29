@@ -21,7 +21,10 @@ DATABASES = {
 }
 
 
-ALLOWED_HOSTS = ['ec2-13-125-216-236.ap-northeast-2.compute.amazonaws.com', '13.125.216.236']
+ALLOWED_HOSTS = [
+    "ec2-13-125-216-236.ap-northeast-2.compute.amazonaws.com",
+    "13.125.216.236",
+]
 
 # S3 Storage
 STORAGES = {
