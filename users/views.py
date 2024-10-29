@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import path
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,7 +12,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import generics
 
 from .serializers import CustomTokenObtainPairSerializer, UserSerializer
 
@@ -161,6 +160,7 @@ def register_user(request, email, name):
         return redirect("/")  # 가입 후 리다이렉트할 URL
 
     return render(request, "register_user.html", {"email": email, "name": name})
+
 
 class UserInfoView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
