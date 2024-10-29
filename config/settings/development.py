@@ -1,7 +1,6 @@
+from celery.schedules import crontab
 from django.contrib.auth import get_user_model
 from dotenv import load_dotenv
-
-from celery.schedules import crontab
 
 from .base import *
 

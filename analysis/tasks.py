@@ -4,12 +4,12 @@ from io import BytesIO
 
 import matplotlib.pyplot as plt
 import pandas as pd
+from celery import shared_task
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 
 from accounts.models import Account
-from celery import shared_task
 from transaction_history.models import TransactionHistory
 
 from .models import Analysis
