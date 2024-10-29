@@ -11,6 +11,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from accounts.models import Account
+from notification.models import Notification
 from transaction_history.models import TransactionHistory
 
 from .models import Analysis
@@ -137,3 +138,47 @@ class AnalysisAPITestCase(TestCase):
         url = reverse("analysis-list-create")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AnalysisNotificationTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="test@example.com", password="testpassword"
+        )
+
+    def test_create_analysis_notification(self):
+        analysis = Analysis.objects.create(
+            user=self.user,
+            about="Test Analysis",
+            type="Weekly",
+            period_start=date(2023, 1, 1),
+            period_end=date(2023, 1, 7),
+            description="This is a test analysis.",
+        )
+        notification = Notification.objects.filter(user=self.user).first()
+        self.assertIsNotNone(notification)
+        self.assertEqual(
+            notification.message,
+            f"새로운 분석 '{analysis.about}'이(가) 생성되었습니다. (유형: {analysis.type})",
+        )
+
+    def test_update_analysis_notification(self):
+        analysis = Analysis.objects.create(
+            user=self.user,
+            about="Test Analysis",
+            type="Weekly",
+            period_start=date(2023, 1, 1),
+            period_end=date(2023, 1, 7),
+            description="This is a test analysis.",
+        )
+        Notification.objects.all().delete()  # 기존 알림 삭제
+
+        analysis.description = "Updated description"
+        analysis.save()
+
+        notification = Notification.objects.filter(user=self.user).first()
+        self.assertIsNotNone(notification)
+        self.assertEqual(
+            notification.message,
+            f"분석 '{analysis.about}'이(가) 수정되었습니다. (유형: {analysis.type})",
+        )
