@@ -24,5 +24,4 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-# 기본 스케줄 설정
-CELERY_BEAT_SCHEDULE = {}
+ALLOWED_HOSTS = ['ec2-13-125-216-236.ap-northeast-2.compute.amazonaws.com', '13.125.216.236']
