@@ -2,6 +2,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -20,6 +22,9 @@ INSTALLED_APPS = [
     "accounts",  # Accounts 테이블을 위한 앱
     "transaction_history",  # Transaction_History 테이블을 위한 앱
     "core",  # wait_for_DB 추가
+    "analysis",  # 분석앱
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 REST_FRAMEWORK = {
@@ -73,6 +78,13 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 GOOGLE_CALLBACK_URI = os.environ.get("GOOGLE_CALLBACK_URI")
 
 WSGI_APPLICATION = "config.wsgi.application"
+
+# Celery 설정
+CELERY_BROKER_URL = "redis://localhost:6379/0"  # Redis를 브로커로 사용할 경우
+CELERY_RESULT_BACKEND = "django-db"  # 결과 저장을 위해 Django DB 사용
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Seoul"  # 원하는 시간대 설정
 
 # Internationalization
 LANGUAGE_CODE = "en-us"

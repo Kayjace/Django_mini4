@@ -1,16 +1,16 @@
 from django.urls import path
 
-from .views import TransactionHistoryDetailView, TransactionHistoryListCreateView
+from .views import TransactionDetailView, TransactionListCreateView
 
 urlpatterns = [
     path(
         "transactions/",
-        TransactionHistoryListCreateView.as_view(),
-        name="transaction-list",
+        TransactionListCreateView.as_view(),
+        name="transaction-list-create",
     ),
     path(
         "transactions/<int:pk>/",
-        TransactionHistoryDetailView.as_view(),
+        TransactionDetailView.as_view(),
         name="transaction-detail",
     ),
 ]
