@@ -20,8 +20,36 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 ALLOWED_HOSTS = ['ec2-13-125-216-236.ap-northeast-2.compute.amazonaws.com', '13.125.216.236']
+
+# S3 Storage
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get("ACCESS"),
+            "secret_key": os.environ.get("SECRET"),
+            "bucket_name": os.environ.get("NAME"),
+            "region_name": os.environ.get("REGION"),
+            "location": "media",
+            "default_acl": "public-read",
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": os.environ.get("ACCESS"),
+            "secret_key": os.environ.get("SECRET"),
+            "bucket_name": os.environ.get("NAME"),
+            "region_name": os.environ.get("REGION"),
+            "custom_domain": f'{os.environ.get("NAME")}.s3.amazonaws.com',
+            "location": "static",
+            "default_acl": "public-read",
+        },
+    },
+}
+
+# Static, Media URL
+STATIC_URL = f'https://{os.environ.get("NAME")}.s3.amazonaws.com/static/'
+MEDIA_URL = f'https://{os.environ.get("NAME")}.s3.amazonaws.com/media/'
